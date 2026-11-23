@@ -19,7 +19,7 @@ The app waits for PostgreSQL and runs its database migrations on every start, th
 
 | Variable | Default | Notes |
 |---|---|---|
-| `ADMIN_EMAIL` | *(you enter it)* | Email address of the admin account created on first boot |
+| `ADMIN_EMAIL` | *(you enter it)* | Email address of the admin account created on first boot. Use a real domain: Tymeslot rejects reserved ones such as `.test` or `.local` |
 | `ADMIN_PASSWORD` | generated | Admin password (16 chars + `Aa1!`, meets Tymeslot's rules). Read it in the service's Variables tab |
 | `SECRET_KEY_BASE` | generated (64 chars) | Signs sessions and cookies |
 | `DATA_ENCRYPTION_KEY` | generated (Base64, 48 bytes) | Encrypts stored calendar and video credentials. Never change it after the first boot |
@@ -36,7 +36,9 @@ Everything else (SMTP, Google/GitHub sign-in, calendar OAuth apps, Zoom, Stripe)
 3. **Set up email.** Until you do, Tymeslot discards every email (booking confirmations, reminders, password resets). Add `EMAIL_ADAPTER=smtp` with `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` and `EMAIL_FROM_ADDRESS` (or `postmark` with `POSTMARK_API_KEY`).
 4. Connect calendars and video in the dashboard (CalDAV, Nextcloud, Radicale work with no OAuth app; Google and Outlook need your own OAuth client).
 
-**Memory:** it runs in 0.5 GB RAM (Railway's smallest plan); see `CHANGELOG.md` for measured use.
+**Memory:** it runs in 0.5 GB RAM (Railway's smallest plan). Measured with a 512 MB limit: about 120–130 MB of app memory when idle and after a login, no OOM kills. The template loads code on demand (`RELEASE_MODE=interactive`); upstream's default embedded mode needs about 560 MB and is killed at 0.5 GB.
+
+If the app stops unexpectedly it exits non-zero, so Railway's restart policy brings it back.
 
 ## How updates reach you
 
