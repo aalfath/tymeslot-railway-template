@@ -1,0 +1,13 @@
+#!/bin/bash
+# Caps ffmpeg's threads (it otherwise starts one per host CPU, not per service
+# CPU), for Tymeslot's video transcoding on small Railway plans.
+t="${FFMPEG_THREADS:-2}"
+if [ $# -lt 2 ]; then exec /usr/bin/ffmpeg "$@"; fi
+args=("$@")
+last="${args[$#-1]}"
+prev="${args[$#-2]}"
+unset 'args[$#-1]'
+if [ "$prev" = "-i" ]; then
+  exec /usr/bin/ffmpeg -threads "$t" "${args[@]}" "$last"
+fi
+exec /usr/bin/ffmpeg "${args[@]}" -threads "$t" "$last"
