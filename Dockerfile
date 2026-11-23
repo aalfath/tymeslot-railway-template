@@ -20,6 +20,8 @@ ENV PORT=4000 \
     DATABASE_POOL_SIZE=10 \
     VIPS_CONCURRENCY=2 \
     FFMPEG_THREADS=2 \
+    ERL_EPMD_ADDRESS=127.0.0.1 \
+    ELIXIR_ERL_OPTIONS="-kernel inet_dist_use_interface {127,0,0,1}" \
     EMAIL_ADAPTER=test \
     EMAIL_FROM_NAME=Tymeslot
 
